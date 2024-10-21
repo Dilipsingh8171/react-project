@@ -1,16 +1,16 @@
 import Check from './Check';
 import Another from './components/Another';
-import  Todo  from './components/todo2/Todo';
+import  Todo  from './components/todo3/Todo';
+import { useEffect, useState } from 'react';
 
 
 function App() {
+const[data,setata]=useState('welcome app')
 
   return (
     <>
-    <h1>Hello welcome App.js</h1>
-
-    <Check/>
-    <Another/>
+    {data}
+<Check/>
     </>
   );
 }

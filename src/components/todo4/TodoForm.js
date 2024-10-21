@@ -1,5 +1,5 @@
-// TodoForm.jsx
-import React from 'react';
+// TodoForm.js
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 // Styled Components
@@ -32,7 +32,29 @@ const Button = styled.button`
 `;
 
 // TodoForm Component
-const TodoForm = ({ task, setTask, handleSubmit }) => {
+const TodoForm = ({ addTodo, editTodo, currentTodo }) => {
+  const [task, setTask] = useState('');
+
+  useEffect(() => {
+    if (currentTodo) {
+      setTask(currentTodo.text);
+    } else {
+      setTask('');
+    }
+  }, [currentTodo]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (task.trim() === '') return;
+
+    if (currentTodo) {
+      editTodo(currentTodo.id, task);
+    } else {
+      addTodo(task);
+    }
+    setTask(''); // Clear input field
+  };
+
   return (
     <Form onSubmit={handleSubmit}>
       <Input
@@ -41,7 +63,7 @@ const TodoForm = ({ task, setTask, handleSubmit }) => {
         onChange={(e) => setTask(e.target.value)}
         placeholder="Enter a task..."
       />
-      <Button type="submit">Add</Button>
+      <Button type="submit">{currentTodo ? 'Edit' : 'Add'}</Button>
     </Form>
   );
 };

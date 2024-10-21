@@ -1,10 +1,8 @@
-// Todo.jsx
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 
-// Styled Components
 const Container = styled.div`
   width: 400px;
   margin: 50px auto;
@@ -19,51 +17,44 @@ const Title = styled.h2`
   color: #333;
 `;
 
-// Main Todo Component
 const Todo = () => {
   const [todos, setTodos] = useState([]);
-  const [task, setTask] = useState('');
+  const [currentTodo, setCurrentTodo] = useState(null);
 
-  // Load todos from local storage
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
     setTodos(storedTodos);
   }, []);
 
-  // Save todos to local storage whenever they change
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
 
-  // Function to add a new todo
   const addTodo = (task) => {
     setTodos([...todos, { id: Date.now(), text: task }]);
-    setTask(''); // Clear input field
   };
 
-  // Function to delete a todo
   const deleteTodo = (id) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
-  // Function to edit a todo
+  const startEditing = (todo) => {
+    setCurrentTodo(todo);
+  };
+
   const editTodo = (id, newText) => {
-    const updatedTodos = todos.map((todo) =>
+    const updatedTodos = todos.map((todo) => 
       todo.id === id ? { ...todo, text: newText } : todo
     );
     setTodos(updatedTodos);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    addTodo(task);
+    setCurrentTodo(null); 
   };
 
   return (
     <Container>
       <Title>📝 Todo App</Title>
-      <TodoForm task={task} setTask={setTask} handleSubmit={handleSubmit} />
-      <TodoList todos={todos} deleteTodo={deleteTodo} editTodo={editTodo} />
+      <TodoForm addTodo={addTodo} editTodo={editTodo} currentTodo={currentTodo} />
+      <TodoList todos={todos} deleteTodo={deleteTodo} startEditing={startEditing} />
     </Container>
   );
 };
